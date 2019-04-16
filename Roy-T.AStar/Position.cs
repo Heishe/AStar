@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace RoyT.AStar
 {
@@ -14,25 +15,32 @@ namespace RoyT.AStar
         /// <param name="y">the y-position</param>
         public Position(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>
         /// X-position
         /// </summary>
-        public int X { get; }
+        public int x { get; }
 
         /// <summary>
         /// Y-position
         /// </summary>
-        public int Y { get; }
+        public int y { get; }
 
-        public override string ToString() => $"Position: ({this.X}, {this.Y})";
+        public override string ToString() => $"Position: ({this.x}, {this.y})";
+
+        public static explicit operator Position(Vector2Int v)  
+        {
+            Position p = new Position(v.x,v.y); 
+
+            return p;
+        }
 
         public bool Equals(Position other)
         {
-            return this.X == other.X && this.Y == other.Y;
+            return this.x == other.x && this.y == other.y;
         }
 
         public override bool Equals(object obj)
@@ -55,19 +63,19 @@ namespace RoyT.AStar
 
         public static Position operator +(Position a, Position b)
         {
-            return new Position(a.X + b.X, a.Y + b.Y);
+            return new Position(a.x + b.x, a.y + b.y);
         }
 
         public static Position operator -(Position a, Position b)
         {
-            return new Position(a.X - b.X, a.Y - b.Y);
+            return new Position(a.x - b.x, a.y - b.y);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (this.X * 397) ^ this.Y;
+                return (this.x * 397) ^ this.y;
             }
         }
     }

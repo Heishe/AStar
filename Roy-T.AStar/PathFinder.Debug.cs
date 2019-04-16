@@ -29,7 +29,7 @@ namespace RoyT.AStar
         private static void ClearStepList()
             => StepList.Clear();
         
-        private static List<Position> PartiallyReconstructPath(Grid grid, Position start, Position end, Position[] cameFrom)
+        private static List<Position> PartiallyReconstructPath(AStarGrid grid, Position start, Position end, Position[] cameFrom)
         {
             var path = new List<Position> { end };
 
@@ -37,7 +37,7 @@ namespace RoyT.AStar
             var current = end;
             do
             {
-                var previous = cameFrom[grid.GetIndexUnchecked(current.X, current.Y)];
+                var previous = cameFrom[grid.GetIndexUnchecked(current.x, current.y)];
 
                 // If the path is invalid, probably becase we've not closed
                 // a node yet, return an empty list

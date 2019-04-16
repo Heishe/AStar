@@ -78,22 +78,22 @@ namespace RoyT.AStar
 
         public static Position operator +(Offset a, Position b)
         {
-            return new Position(a.X + b.X, a.Y + b.Y);
+            return new Position(a.X + b.x, a.Y + b.y);
         }
 
         public static Position operator -(Offset a, Position b)
         {
-            return new Position(a.X - b.X, a.Y - b.Y);
+            return new Position(a.X - b.x, a.Y - b.y);
         }
 
         public static Position operator +(Position a, Offset b)
         {
-            return new Position(a.X + b.X, a.Y + b.Y);
+            return new Position(a.x + b.X, a.y + b.Y);
         }
 
         public static Position operator -(Position a, Offset b)
         {
-            return new Position(a.X - b.X, a.Y - b.Y);
+            return new Position(a.x - b.X, a.y - b.Y);
         }
 
         public override int GetHashCode()

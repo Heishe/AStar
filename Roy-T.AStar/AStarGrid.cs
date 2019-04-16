@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace RoyT.AStar
 {
@@ -9,7 +10,7 @@ namespace RoyT.AStar
     /// Use SetCellCost to change the cost of traversing a cell.
     /// Use BlockCell to make a cell completely intraversable.
     /// </summary>
-    public sealed class Grid
+    public sealed class AStarGrid
     {       
         private readonly float DefaultCost;
         private readonly float[] Weights;        
@@ -20,7 +21,7 @@ namespace RoyT.AStar
         /// <param name="dimX">The x-dimension of your world</param>
         /// <param name="dimY">The y-dimesion of your world</param>
         /// <param name="defaultCost">The default cost every cell is initialized with</param>
-        public Grid(int dimX, int dimY, float defaultCost = 1.0f)
+        public AStarGrid(int dimX, int dimY, float defaultCost = 1.0f)
         {
             if (defaultCost < 1)
             {
@@ -62,7 +63,7 @@ namespace RoyT.AStar
                     $"Argument {nameof(cost)} with value {cost} is invalid. The cost of traversing a cell cannot be less than one");
             }
 
-            this.Weights[GetIndex(position.X, position.Y)] = cost;
+            this.Weights[GetIndex(position.x, position.y)] = cost;
         }
 
         /// <summary>
@@ -70,6 +71,11 @@ namespace RoyT.AStar
         /// </summary>
         /// <param name="position">A position inside the grid</param>
         public void BlockCell(Position position) => SetCellCost(position, float.PositiveInfinity);
+
+        public void BlockCell(Vector2Int position)
+        {
+            BlockCell(new Position(position.x, position.y));
+        }
 
         /// <summary>
         /// Makes the cell traversable, gives it the default traversal cost as provided in the constructor
@@ -85,7 +91,7 @@ namespace RoyT.AStar
         /// <returns>The cost</returns>
         public float GetCellCost(Position position)
         {
-            return this.Weights[GetIndex(position.X, position.Y)];
+            return this.Weights[GetIndex(position.x, position.y)];
         }
 
         /// <summary>
@@ -96,7 +102,7 @@ namespace RoyT.AStar
         /// <returns>The cost</returns>
         internal float GetCellCostUnchecked(Position position)
         {
-            return this.Weights[GetIndexUnchecked(position.X, position.Y)];
+            return this.Weights[GetIndexUnchecked(position.x, position.y)];
         }
 
         /// <summary>
@@ -108,6 +114,11 @@ namespace RoyT.AStar
         /// <returns>Positions along the shortest path from start to end, or an empty array if no path could be found</returns>
         public Position[] GetPath(Position start, Position end)
             => GetPath(start, end, MovementPatterns.Full);
+
+        public Position[] GetPath(Vector2Int start, Vector2Int end)
+        {
+            return GetPath(new Position(start.x, start.y), new Position(end.x, end.y));
+        }
 
         /// <summary>
         /// Computes the lowest-cost path from start to end inside the grid for an agent with a custom

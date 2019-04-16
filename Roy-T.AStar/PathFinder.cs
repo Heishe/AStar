@@ -10,7 +10,7 @@ namespace RoyT.AStar
     /// </summary>
     internal static partial class PathFinder
     {
-        public static List<Position> FindPath(Grid grid, Position start, Position end, Offset[] movementPattern)
+        public static List<Position> FindPath(AStarGrid grid, Position start, Position end, Offset[] movementPattern)
         {            
             ClearStepList();
 
@@ -45,7 +45,7 @@ namespace RoyT.AStar
             return null;
         }
 
-        public static List<Position> FindPath(Grid grid, Position start, Position end, Offset[] movementPattern, int iterationLimit)
+        public static List<Position> FindPath(AStarGrid grid, Position start, Position end, Offset[] movementPattern, int iterationLimit)
         {
             ClearStepList();
 
@@ -83,7 +83,7 @@ namespace RoyT.AStar
         }
 
         private static void Step(
-            Grid grid,
+            AStarGrid grid,
             MinHeap open,
             Position[] cameFrom,
             float[] costSoFar,
@@ -92,7 +92,7 @@ namespace RoyT.AStar
             Position end)
         {
             // Get the cost associated with getting to the current position
-            var initialCost = costSoFar[grid.GetIndexUnchecked(current.X, current.Y)];
+            var initialCost = costSoFar[grid.GetIndexUnchecked(current.x, current.y)];
 
             // Get all directions we can move to according to the movement pattern and the dimensions of the grid
             foreach (var option in GetMovementOptions(current, grid.DimX, grid.DimY, movementPattern))
@@ -104,7 +104,7 @@ namespace RoyT.AStar
                 if (float.IsInfinity(cellCost))
                     continue;
 
-                var index = grid.GetIndexUnchecked(position.X, position.Y);
+                var index = grid.GetIndexUnchecked(position.x, position.y);
 
                 // Compute how much it would cost to get to the new position via this path
                 var newCost = initialCost + cellCost * option.Cost;
@@ -127,13 +127,13 @@ namespace RoyT.AStar
             }
         }
 
-        private static List<Position> ReconstructPath(Grid grid, Position start, Position end, Position[] cameFrom)
+        private static List<Position> ReconstructPath(AStarGrid grid, Position start, Position end, Position[] cameFrom)
         {
             var path = new List<Position> { end };
             var current = end;
             do
             {
-                var previous = cameFrom[grid.GetIndexUnchecked(current.X, current.Y)];               
+                var previous = cameFrom[grid.GetIndexUnchecked(current.x, current.y)];               
                 current = previous;
                 path.Add(current);
             } while (current != start);
@@ -151,15 +151,15 @@ namespace RoyT.AStar
                 m =>
                 {
                     var target = position + m;
-                    return target.X >= 0 && target.X < dimX && target.Y >= 0 && target.Y < dimY;
+                    return target.x >= 0 && target.x < dimX && target.y >= 0 && target.y < dimY;
                 });            
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float ManhattanDistance(Position p0, Position p1)
         {
-            var dx = Math.Abs(p0.X - p1.X);
-            var dy = Math.Abs(p0.Y - p1.Y);
+            var dx = Math.Abs(p0.x - p1.x);
+            var dy = Math.Abs(p0.y - p1.y);
             return dx + dy;
         }
     }
